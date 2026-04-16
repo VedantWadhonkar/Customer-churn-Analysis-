@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Login</h2>
+
+<form method="post">
+    Mobile Number:<br>
+    <input type="text" name="mobile"><br><br>
+
+    Password:<br>
+    <input type="password" name="password"><br><br>
+
+    <button type="submit">Login</button>
+</form>
+
+<p><a href="#">Forgot your password?</a></p>
+<p>Don't have an account? <a href="/signup">Sign up here</a></p>
+
+{% endblock %}
