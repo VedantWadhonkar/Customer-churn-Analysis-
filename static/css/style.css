@@ -1,0 +1,96 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI';
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    color: white;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 40px;
+    background: rgba(0,0,0,0.6);
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.nav-links a {
+    margin: 0 12px;
+    text-decoration: none;
+    color: white;
+}
+
+/* Main */
+.main {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+/* Hero */
+.hero h1 {
+    font-size: 38px;
+    margin-bottom: 10px;
+}
+
+.sub {
+    opacity: 0.8;
+}
+
+/* Button */
+.btn {
+    background: #00c6ff;
+    padding: 10px 20px;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Center Card */
+.center-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70vh;
+}
+
+.glass-card {
+    width: 320px;
+    padding: 25px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+}
+
+/* Inputs */
+input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+}
+
+/* Dashboard */
+.upload-box {
+    margin-top: 20px;
+}
+
+.result {
+    margin-top: 20px;
+    background: white;
+    color: black;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* Footer */
+footer {
+    background: rgba(0,0,0,0.6);
+    padding: 15px;
+    text-align: center;
+}

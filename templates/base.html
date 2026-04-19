@@ -2,24 +2,27 @@
 <html>
 <head>
     <title>ChurnScope</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
 
-<div class="navbar">
-    <a href="/">Home</a>
-    <a href="/about">About</a>
-    <a href="/signup">Signup</a>
-    <a href="/login">Login</a>
-</div>
+<nav class="navbar">
+    <div class="logo">ChurnScope</div>
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/signup">Signup</a>
+        <a href="/login">Login</a>
+    </div>
+</nav>
 
-<div class="container">
+<div class="main">
     {% block content %}{% endblock %}
 </div>
 
-<div class="footer">
-    © 2025 ChurnScope | Built with Flask, Python & ML
-</div>
+<footer>
+    © 2026 ChurnScope | Built with Flask & Python
+</footer>
 
 </body>
 </html>
