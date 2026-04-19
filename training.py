@@ -1,37 +1,61 @@
 import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LogisticRegression
-import pickle
+import matplotlib.pyplot as plt
+import time
+import os
 
-# STEP 1: Load dataset (your file)
-data = pd.read_csv("data/churn.csv")   # change to read_excel if needed
+def analyze_churn(filepath):
 
-# STEP 2: Select important columns
-data = data[['tenure', 'MonthlyCharges', 'Contract', 'Churn']]
+    # ---------- LOAD DATA ----------
+    df = pd.read_csv(filepath) if filepath.endswith('.csv') else pd.read_excel(filepath)
 
-# STEP 3: Convert text to numbers
-data['Churn'] = data['Churn'].map({'Yes':1, 'No':0})
+    if 'Churn' not in df.columns:
+        return "Dataset must contain 'Churn' column"
 
-data['Contract'] = data['Contract'].map({
-    'Month-to-month':0,
-    'One year':1,
-    'Two year':2
-})
+    # ---------- CLEAN ----------
+    df = df.dropna()
+    df['Churn'] = df['Churn'].replace({'Yes': 1, 'No': 0})
 
-# STEP 4: Remove missing values
-data = data.dropna()
+    total = len(df)
+    churn_count = int(df['Churn'].sum())
+    non_churn = total - churn_count
+    churn_rate = round((churn_count / total) * 100, 2)
 
-# STEP 5: Split data
-X = data[['tenure', 'MonthlyCharges', 'Contract']]
-y = data['Churn']
+    # ---------- UNIQUE IMAGE NAMES (FIX CACHE ISSUE) ----------
+    timestamp = str(int(time.time()))
+    bar_path = f"static/bar_{timestamp}.png"
+    pie_path = f"static/pie_{timestamp}.png"
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+    # ---------- BAR CHART ----------
+    plt.figure()
+    plt.bar(['Churn', 'Not Churn'], [churn_count, non_churn])
+    plt.title("Churn vs Non-Churn")
+    plt.tight_layout()
+    plt.savefig(bar_path)
+    plt.close()
 
-# STEP 6: Train model
-model = LogisticRegression()
-model.fit(X_train, y_train)
+    # ---------- PIE CHART ----------
+    plt.figure()
+    plt.pie([churn_count, non_churn],
+            labels=['Churn', 'Not Churn'],
+            autopct='%1.1f%%')
+    plt.title("Churn Distribution")
+    plt.tight_layout()
+    plt.savefig(pie_path)
+    plt.close()
 
-# STEP 7: Save model
-pickle.dump(model, open("model.pkl", "wb"))
+    # ---------- FINAL OUTPUT ----------
+    result = f"""
+    <b>📊 Final Summary</b><br><br>
 
-print("✅ Model trained and saved!")
+    Total Customers: {total}<br>
+    Churn Customers: {churn_count}<br>
+    Non-Churn Customers: {non_churn}<br>
+    Churn Rate: {churn_rate}%<br><br>
+
+    <b>📊 Charts</b><br><br>
+
+    <img src="/{bar_path}" width="350"><br><br>
+    <img src="/{pie_path}" width="350">
+    """
+
+    return result

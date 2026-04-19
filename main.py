@@ -7,6 +7,8 @@ from flask import Flask, render_template, request, redirect, flash, session
 from dotenv import load_dotenv
 from werkzeug.security import generate_password_hash, check_password_hash
 
+from training import analyze_churn
+
 load_dotenv()
 
 app = Flask(__name__)
@@ -116,12 +118,19 @@ def logout():
     return redirect('/')
 
 
-# ---------------- DASHBOARD ----------------
+# ---------------- DASHBOARD (FINAL) ----------------
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
 
     if 'user' not in session:
         return redirect('/login')
+
+    output = None
+
+    # ✅ GET COMPANY NAME
+    cursor.execute("SELECT company FROM users WHERE mobile=%s", (session['user'],))
+    user = cursor.fetchone()
+    company = user['company'] if user else "User"
 
     if request.method == 'POST':
         file = request.files['file']
@@ -133,25 +142,48 @@ def dashboard():
             file.save(filepath)
 
             try:
-                if filename.endswith('.csv'):
-                    pd.read_csv(filepath)
+                # ✅ READ FILE
+                df = pd.read_csv(filepath) if filename.endswith('.csv') else pd.read_excel(filepath)
+
+                # ✅ REQUIRED COLUMN CHECK
+                required_columns = ['Churn']
+                missing = [col for col in required_columns if col not in df.columns]
+
+                # ❌ INVALID DATASET
+                if missing:
+                    output = {
+                        "status": "error",
+                        "missing": missing,
+                        "required": required_columns
+                    }
+                    flash("Upload proper dataset with required columns")
+
+                # ✅ VALID DATASET
                 else:
-                    pd.read_excel(filepath)
+                    result = analyze_churn(filepath)
 
-                flash("Dataset uploaded successfully")
+                    output = {
+                        "status": "success",
+                        "data": result
+                    }
 
-            except:
-                flash("File uploaded but could not be processed")
+                    flash("Dataset uploaded successfully")
+
+            except Exception as e:
+                output = {
+                    "status": "error",
+                    "missing": [],
+                    "required": [],
+                    "data": f"Error: {str(e)}"
+                }
 
         else:
             flash("Only CSV and Excel files are allowed")
 
-        return redirect('/dashboard')
-
-    return render_template('dashboard.html')
+    return render_template('dashboard.html', output=output, company=company)
 
 
-# ---------------- FORGOT PASSWORD (NO EMAIL) ----------------
+# ---------------- FORGOT PASSWORD ----------------
 @app.route('/forgot-password', methods=['GET', 'POST'])
 def forgot_password():
     if request.method == 'POST':
