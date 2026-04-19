@@ -8,21 +8,52 @@
 
 <nav class="navbar">
     <div class="logo">ChurnScope</div>
+
     <div class="nav-links">
         <a href="/">Home</a>
         <a href="/about">About</a>
-        <a href="/signup">Signup</a>
-        <a href="/login">Login</a>
+
+        {% if session.get('user') %}
+            <!-- ✅ When user is logged in -->
+            <a href="/dashboard">Dashboard</a>
+            <a href="/logout">Logout</a>
+        {% else %}
+            <!-- ❌ When user is NOT logged in -->
+            <a href="/signup">Signup</a>
+            <a href="/login">Login</a>
+        {% endif %}
     </div>
 </nav>
 
 <div class="main">
+
+    <!-- ✅ FLASH MESSAGE -->
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="flash-container">
+          {% for msg in messages %}
+            <div class="flash">{{ msg }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
     {% block content %}{% endblock %}
 </div>
 
 <footer>
     © 2026 ChurnScope | Built with Flask & Python
 </footer>
+
+<!-- ✅ Auto-hide flash -->
+<script>
+    setTimeout(function() {
+        let flash = document.querySelector('.flash-container');
+        if (flash) {
+            flash.style.display = 'none';
+        }
+    }, 3000);
+</script>
 
 </body>
 </html>

@@ -6,16 +6,43 @@
         <h2>Create Account</h2>
 
         <form method="POST">
-            <input type="text" name="name" placeholder="Full Name" required>
 
-            <input type="email" name="email" placeholder="Email (@gmail.com / @yahoo.com)" required>
+            <input type="text" 
+                   name="name" 
+                   placeholder="Full Name" 
+                   required>
 
-            <input type="text" name="mobile" placeholder="Mobile Number" required pattern="[0-9]{10}">
+            <input type="email" 
+                   name="email" 
+                   placeholder="Email (@gmail.com / @yahoo.com)" 
+                   required>
 
-            <input type="password" name="password" placeholder="Password" required>
+            <!-- ✅ STRICT MOBILE INPUT -->
+            <input type="text" 
+                   name="mobile" 
+                   placeholder="Mobile Number" 
+                   required
+                   maxlength="10"
+                   pattern="[0-9]{10}"
+                   title="Enter exactly 10 digits"
+                   oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+
+            <input type="text" 
+                   name="company" 
+                   placeholder="Company Name" 
+                   required>
+
+            <input type="password" 
+                   name="password" 
+                   placeholder="Password" 
+                   required>
 
             <button class="btn">Signup</button>
         </form>
+
+        <p class="link">
+            Already have an account? <a href="/login">Login</a>
+        </p>
     </div>
 </div>
 

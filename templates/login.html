@@ -6,8 +6,21 @@
         <h2>Login</h2>
 
         <form method="POST">
-            <input type="text" name="mobile" placeholder="Mobile Number" required pattern="[0-9]{10}">
-            <input type="password" name="password" placeholder="Password" required>
+
+            <!-- ✅ STRICT MOBILE INPUT -->
+            <input type="text" 
+                   name="mobile" 
+                   placeholder="Mobile Number"
+                   required
+                   maxlength="10"
+                   pattern="[0-9]{10}"
+                   title="Enter exactly 10 digits"
+                   oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+
+            <input type="password" 
+                   name="password" 
+                   placeholder="Password" 
+                   required>
 
             <button class="btn">Login</button>
         </form>
@@ -16,7 +29,9 @@
             <a href="/forgot-password">Forgot Password?</a>
         </p>
 
-        <p>Don't have an account? <a href="/signup">Signup</a></p>
+        <p class="link">
+            Don't have an account? <a href="/signup">Signup</a>
+        </p>
     </div>
 </div>
 

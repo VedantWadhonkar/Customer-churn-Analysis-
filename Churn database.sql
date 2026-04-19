@@ -9,10 +9,7 @@ CREATE TABLE users (
     password_hash VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-CREATE TABLE uploads (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT,
-    filename VARCHAR(255),
-    uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-);
+
+SELECT * FROM users;
+
+
