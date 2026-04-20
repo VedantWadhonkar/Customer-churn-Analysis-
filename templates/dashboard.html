@@ -5,20 +5,22 @@
 
     <div class="dashboard-card">
 
+        <!-- Company -->
         <h3 class="welcome-text">Welcome, {{ company }}</h3>
 
+        <!-- Title -->
         <h2>Customer Churn Analysis</h2>
 
         <p class="subtitle">
             Upload your dataset to begin analysis
         </p>
 
-        <!-- Required Column Info -->
+        <!-- Required Column -->
         <div class="info-box">
             <p><b>Required Column:</b> Churn</p>
         </div>
 
-        <!-- Upload -->
+        <!-- Upload Form -->
         <form method="POST" enctype="multipart/form-data" class="upload-box">
             <input type="file" name="file" accept=".csv, .xlsx" required>
             <button class="btn">Upload Dataset</button>
@@ -28,24 +30,19 @@
             Supported formats: CSV (.csv) and Excel (.xlsx)
         </p>
 
-        <!-- ✅ ERROR MESSAGE -->
+        <!-- ❌ ERROR MESSAGE -->
         {% if output and output.status == "error" %}
         <div class="error-box">
             <h3>❌ Invalid Dataset</h3>
 
-            <p><b>Missing Columns:</b></p>
-            <ul>
-                {% for col in output.missing %}
-                <li>{{ col }}</li>
-                {% endfor %}
-            </ul>
+            <p><b>Missing Columns:</b> {{ output.missing | join(', ') }}</p>
 
             <p><b>Required Columns:</b> {{ output.required | join(', ') }}</p>
         </div>
         {% endif %}
 
         <!-- ✅ SUCCESS RESULT -->
-        {% if output and output.status == "success" %}
+        {% if output and output.status == "success" and output.data %}
         <div class="result">
             <h3>Analysis Result</h3>
 

@@ -5,13 +5,11 @@ import os
 
 def analyze_churn(filepath):
 
-    # ---------- LOAD DATA ----------
     df = pd.read_csv(filepath) if filepath.endswith('.csv') else pd.read_excel(filepath)
 
     if 'Churn' not in df.columns:
         return "Dataset must contain 'Churn' column"
 
-    # ---------- CLEAN ----------
     df = df.dropna()
     df['Churn'] = df['Churn'].replace({'Yes': 1, 'No': 0})
 
@@ -20,42 +18,37 @@ def analyze_churn(filepath):
     non_churn = total - churn_count
     churn_rate = round((churn_count / total) * 100, 2)
 
-    # ---------- UNIQUE IMAGE NAMES (FIX CACHE ISSUE) ----------
-    timestamp = str(int(time.time()))
-    bar_path = f"static/bar_{timestamp}.png"
-    pie_path = f"static/pie_{timestamp}.png"
+    # ✅ AUTO CLEAN OLD IMAGES
+    if os.path.exists("static"):
+        for file in os.listdir("static"):
+            if file.endswith(".png"):
+                os.remove(os.path.join("static", file))
 
-    # ---------- BAR CHART ----------
+    timestamp = str(int(time.time()))
+
+    bar_file = f"bar_{timestamp}.png"
+    pie_file = f"pie_{timestamp}.png"
+
+    bar_path = os.path.join("static", bar_file)
+    pie_path = os.path.join("static", pie_file)
+
+    # BAR
     plt.figure()
     plt.bar(['Churn', 'Not Churn'], [churn_count, non_churn])
-    plt.title("Churn vs Non-Churn")
-    plt.tight_layout()
     plt.savefig(bar_path)
     plt.close()
 
-    # ---------- PIE CHART ----------
+    # PIE
     plt.figure()
-    plt.pie([churn_count, non_churn],
-            labels=['Churn', 'Not Churn'],
-            autopct='%1.1f%%')
-    plt.title("Churn Distribution")
-    plt.tight_layout()
+    plt.pie([churn_count, non_churn], labels=['Churn', 'Not Churn'], autopct='%1.1f%%')
     plt.savefig(pie_path)
     plt.close()
 
-    # ---------- FINAL OUTPUT ----------
-    result = f"""
-    <b>📊 Final Summary</b><br><br>
+    return f"""
+    <b>Total Customers:</b> {total}<br>
+    <b>Churn Customers:</b> {churn_count}<br>
+    <b>Churn Rate:</b> {churn_rate}%<br><br>
 
-    Total Customers: {total}<br>
-    Churn Customers: {churn_count}<br>
-    Non-Churn Customers: {non_churn}<br>
-    Churn Rate: {churn_rate}%<br><br>
-
-    <b>📊 Charts</b><br><br>
-
-    <img src="/{bar_path}" width="350"><br><br>
-    <img src="/{pie_path}" width="350">
+    <img src="/static/{bar_file}?v={timestamp}" width="350"><br><br>
+    <img src="/static/{pie_file}?v={timestamp}" width="350">
     """
-
-    return result

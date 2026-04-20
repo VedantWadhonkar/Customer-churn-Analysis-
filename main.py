@@ -118,7 +118,7 @@ def logout():
     return redirect('/')
 
 
-# ---------------- DASHBOARD (FINAL) ----------------
+# ---------------- DASHBOARD ----------------
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
 
@@ -127,7 +127,7 @@ def dashboard():
 
     output = None
 
-    # ✅ GET COMPANY NAME
+    # GET COMPANY NAME
     cursor.execute("SELECT company FROM users WHERE mobile=%s", (session['user'],))
     user = cursor.fetchone()
     company = user['company'] if user else "User"
@@ -142,10 +142,8 @@ def dashboard():
             file.save(filepath)
 
             try:
-                # ✅ READ FILE
                 df = pd.read_csv(filepath) if filename.endswith('.csv') else pd.read_excel(filepath)
 
-                # ✅ REQUIRED COLUMN CHECK
                 required_columns = ['Churn']
                 missing = [col for col in required_columns if col not in df.columns]
 
@@ -153,7 +151,7 @@ def dashboard():
                 if missing:
                     output = {
                         "status": "error",
-                        "missing": missing,
+                        "missing": missing,        # LIST (IMPORTANT FIX)
                         "required": required_columns
                     }
                     flash("Upload proper dataset with required columns")
@@ -169,12 +167,11 @@ def dashboard():
 
                     flash("Dataset uploaded successfully")
 
-            except Exception as e:
+            except Exception:
                 output = {
                     "status": "error",
-                    "missing": [],
-                    "required": [],
-                    "data": f"Error: {str(e)}"
+                    "missing": ["Invalid or corrupted file"],
+                    "required": ["Churn"]
                 }
 
         else:
