@@ -1,59 +1,174 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="dashboard-container">
+<div class="dashboard-full">
 
-    <div class="dashboard-card">
-
-        <!-- Company -->
-        <h3 class="welcome-text">Welcome, {{ company }}</h3>
-
-        <!-- Title -->
+    <!-- Header -->
+    <div class="dashboard-header">
         <h2>Customer Churn Analysis</h2>
+        <p class="subtitle">Welcome, {{ company }}</p>
+    </div>
 
-        <p class="subtitle">
-            Upload your dataset to begin analysis
-        </p>
+    <!-- Upload Section -->
+    <div class="upload-section">
+        <p><b>Required Column:</b> Churn</p>
 
-        <!-- Required Column -->
-        <div class="info-box">
-            <p><b>Required Column:</b> Churn</p>
-        </div>
+        <form method="POST" enctype="multipart/form-data" class="upload-form">
 
-        <!-- Upload Form -->
-        <form method="POST" enctype="multipart/form-data" class="upload-box">
-            <input type="file" name="file" accept=".csv, .xlsx" required>
-            <button class="btn">Upload Dataset</button>
+            <div class="file-upload-row">
+
+                <!-- Hidden File Input -->
+                <input type="file" id="fileInput" name="file" accept=".csv, .xlsx" required hidden>
+
+                <!-- Custom Button -->
+                <label for="fileInput" class="file-label">
+                    Choose File
+                </label>
+
+                <!-- File Name -->
+                <span id="fileName">No file selected</span>
+
+                <!-- Upload Button -->
+                <button class="btn">Upload Dataset</button>
+
+                <!-- Loader -->
+                <div id="loader">Processing dataset...</div>
+
+            </div>
+
         </form>
 
         <p class="info-text">
             Supported formats: CSV (.csv) and Excel (.xlsx)
         </p>
+    </div>
 
-        <!-- ❌ ERROR MESSAGE -->
-        {% if output and output.status == "error" %}
-        <div class="error-box">
-            <h3>❌ Invalid Dataset</h3>
+    <!-- ❌ ERROR -->
+    {% if output and output.status == "error" %}
+    <div class="error-box">
+        <h3>❌ Invalid Dataset</h3>
+        <p><b>Missing Columns:</b> {{ output.missing | join(', ') }}</p>
+        <p><b>Required Columns:</b> {{ output.required | join(', ') }}</p>
+    </div>
+    {% endif %}
 
-            <p><b>Missing Columns:</b> {{ output.missing | join(', ') }}</p>
+    <!-- ✅ RESULT -->
+    {% if output and output.status == "success" and output.data %}
+    <div class="result-section">
 
-            <p><b>Required Columns:</b> {{ output.required | join(', ') }}</p>
+        <h3>Analysis Result</h3>
+
+        <div class="result-box">
+            {{ output.data | safe }}
         </div>
-        {% endif %}
 
-        <!-- ✅ SUCCESS RESULT -->
-        {% if output and output.status == "success" and output.data %}
-        <div class="result">
-            <h3>Analysis Result</h3>
+        <!-- 📊 Chart -->
+        <canvas id="churnChart" style="margin-top:30px;"></canvas>
 
-            <div class="result-box">
-                {{ output.data | safe }}
-            </div>
+        <!-- 🧠 Solutions -->
+        {% if output.solutions %}
+        <div class="solution-section">
+            <h3>Recommended Business Actions</h3>
+
+            <ul>
+                {% for s in output.solutions %}
+                    <li>{{ s }}</li>
+                {% endfor %}
+            </ul>
         </div>
         {% endif %}
 
     </div>
+    {% endif %}
 
 </div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+/* ================= FILE NAME ================= */
+document.getElementById("fileInput").addEventListener("change", function() {
+    const fileName = this.files[0] ? this.files[0].name : "No file selected";
+    document.getElementById("fileName").textContent = fileName;
+});
+
+/* ================= LOADER ================= */
+document.querySelector("form").addEventListener("submit", function() {
+    document.getElementById("loader").style.display = "block";
+});
+
+/* ================= CHART ================= */
+function generateChart() {
+    const table = document.querySelector(".result-box table");
+    if (!table) return;
+
+    let labels = [];
+    let values = [];
+
+    for (let i = 1; i < table.rows.length; i++) {
+        labels.push(table.rows[i].cells[0].innerText);
+        values.push(parseFloat(table.rows[i].cells[1].innerText));
+    }
+
+    const ctx = document.getElementById('churnChart');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Churn Analysis',
+                data: values,
+                backgroundColor: [
+                    '#00c6ff',
+                    '#ff4d4d',
+                    '#00e676',
+                    '#ffd166'
+                ],
+                borderRadius: 8
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#ffffff',
+                        font: {
+                            size: 14
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        color: '#ffffff',
+                        font: {
+                            size: 14,
+                            weight: 'bold'
+                        }
+                    },
+                    grid: {
+                        color: 'rgba(255,255,255,0.08)'
+                    }
+                },
+                y: {
+                    ticks: {
+                        color: '#ffffff'
+                    },
+                    grid: {
+                        color: 'rgba(255,255,255,0.08)'
+                    }
+                }
+            }
+        }
+    });
+}
+
+generateChart();
+
+</script>
 
 {% endblock %}

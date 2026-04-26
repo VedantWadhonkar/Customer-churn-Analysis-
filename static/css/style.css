@@ -1,16 +1,18 @@
+/* ================= GLOBAL ================= */
 body {
     margin: 0;
-    font-family: 'Segoe UI';
+    font-family: 'Segoe UI', sans-serif;
     background: linear-gradient(135deg, #1e1b4b, #3730a3, #1d4ed8);
     color: white;
 }
 
-/* Navbar */
+/* ================= NAVBAR ================= */
 .navbar {
     display: flex;
     justify-content: space-between;
     padding: 15px 40px;
-    background: rgba(15, 23, 42, 0.8);
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(10px);
 }
 
 .logo {
@@ -22,17 +24,29 @@ body {
     margin: 0 12px;
     text-decoration: none;
     color: white;
+    transition: 0.2s;
 }
 
-/* Main */
+.nav-links a:hover {
+    color: #00c6ff;
+}
+
+/* ================= MAIN ================= */
 .main {
-    text-align: center;
-    padding: 60px 20px;
+    padding: 30px 40px;
+    min-height: calc(100vh - 120px);
+    box-sizing: border-box;
 }
 
-/* Button */
+/* Only center specific pages */
+.hero,
+.center-box {
+    text-align: center;
+}
+
+/* ================= BUTTON ================= */
 .btn {
-    background: #00c6ff;
+    background: linear-gradient(90deg, #00c6ff, #0072ff);
     padding: 10px 20px;
     border: none;
     color: white;
@@ -42,10 +56,10 @@ body {
 }
 
 .btn:hover {
-    background: #009bdc;
+    transform: scale(1.05);
 }
 
-/* Center Card */
+/* ================= AUTH ================= */
 .center-box {
     display: flex;
     justify-content: center;
@@ -59,6 +73,7 @@ body {
     border-radius: 12px;
     background: rgba(255,255,255,0.1);
     backdrop-filter: blur(10px);
+    box-shadow: 0 0 25px rgba(0,0,0,0.3);
 }
 
 /* Inputs */
@@ -68,73 +83,133 @@ input {
     margin: 10px 0;
     border: none;
     border-radius: 5px;
+    background: rgba(255,255,255,0.1);
+    color: white;
 }
 
-/* Dashboard Layout */
-.dashboard-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 70vh;
+input::placeholder {
+    color: rgba(255,255,255,0.7);
 }
 
-.dashboard-card {
-    background: rgba(255, 255, 255, 0.08);
-    padding: 40px;
+/* ================= DASHBOARD ================= */
+.dashboard-full {
+    width: 100%;
+    padding: 40px 60px;
+    box-sizing: border-box;
+}
+
+.dashboard-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.dashboard-header h2 {
+    font-size: 32px;
+    margin-bottom: 5px;
+}
+
+/* Upload section */
+.upload-section {
+    background: rgba(255,255,255,0.08);
+    padding: 25px;
     border-radius: 12px;
     text-align: center;
-    width: 420px;
     backdrop-filter: blur(10px);
+    margin-bottom: 30px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.2);
 }
 
-/* Titles */
-.dashboard-card h2 {
-    margin-bottom: 10px;
+/* File upload layout */
+.file-upload-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
 }
 
-.subtitle {
-    font-size: 14px;
-    margin-bottom: 20px;
+.file-label {
+    background: rgba(255,255,255,0.1);
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.file-label:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+#fileName {
+    font-size: 13px;
     opacity: 0.8;
 }
 
-.welcome-text {
-    font-size: 16px;
-    margin-bottom: 5px;
-    opacity: 0.9;
+.file-upload-row .btn {
+    width: 180px;
 }
 
-/* Upload */
-.upload-box {
+/* ================= LOADER ================= */
+#loader {
+    display: none;
+    margin-top: 10px;
+    font-size: 14px;
+    opacity: 0.8;
+    color: #00c6ff;
+}
+
+/* ================= RESULT ================= */
+.result-section {
     margin-top: 20px;
 }
 
-.upload-box input {
+.result-box {
+    width: 100%;
+    background: rgba(255,255,255,0.12);
+    padding: 20px;
+    border-radius: 12px;
+    overflow-x: auto;
+    user-select: text;
+    box-shadow: 0 0 25px rgba(0,0,0,0.2);
+}
+
+/* ================= CHART ================= */
+canvas {
+    background: rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 15px;
+    margin-top: 20px;
+}
+
+/* ================= SOLUTIONS ================= */
+.solution-section {
+    margin-top: 30px;
+    background: rgba(255,255,255,0.08);
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.solution-section h3 {
     margin-bottom: 15px;
 }
 
-/* Info text */
-.info-text {
-    margin-top: 10px;
-    font-size: 13px;
-    opacity: 0.7;
+.solution-section ul {
+    list-style: none;
+    padding: 0;
 }
 
-/* Result Section */
-.result {
-    margin-top: 25px;
+.solution-section li {
+    margin: 10px 0;
+    padding: 12px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 8px;
+    transition: 0.2s;
 }
 
-.result-box {
-    background: rgba(255,255,255,0.15);
-    padding: 15px;
-    border-radius: 10px;
-    margin-top: 10px;
-    color: white;
-    text-align: center;
+.solution-section li:hover {
+    background: rgba(255,255,255,0.18);
 }
 
-/* Tables (VERY IMPORTANT for your issue) */
+/* ================= TABLE ================= */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -144,15 +219,22 @@ table {
 
 th, td {
     border: 1px solid rgba(255,255,255,0.3);
-    padding: 8px;
+    padding: 10px;
     text-align: center;
 }
 
 th {
-    background: rgba(0, 198, 255, 0.6);
+    background: linear-gradient(90deg, #00c6ff, #0072ff);
 }
 
-/* Flash Message */
+/* ================= INFO ================= */
+.info-text {
+    margin-top: 10px;
+    font-size: 13px;
+    opacity: 0.7;
+}
+
+/* ================= FLASH ================= */
 .flash-container {
     margin: 15px auto;
     width: 320px;
@@ -167,19 +249,15 @@ th {
     margin-bottom: 10px;
 }
 
-/* Footer */
+/* ================= FOOTER ================= */
 footer {
     background: rgba(0,0,0,0.6);
     padding: 15px;
     text-align: center;
+    margin-top: 40px;
 }
 
-/* 🔥 REMOVE BLUE SELECTION COMPLETELY */
-* {
-    user-select: none;
-}
-
-/* Optional (extra safety) */
+/* ================= OPTIONAL ================= */
 ::selection {
     background: transparent;
 }
